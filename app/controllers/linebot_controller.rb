@@ -53,7 +53,7 @@ class LinebotController < ApplicationController
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
-          client.reply_message(event['replyToken'], create_message(event))
+          client.reply_message(event['replyToken'], 'test')
         end
       end
     end

@@ -72,7 +72,6 @@ class LinebotController < ApplicationController
 
   def create_message(event)
     seatch_text = event.message['text']
-    all_garbage = BURNABLE.concat(NON_BURNABLE).concat(RECYCLABLE)
     apply_message = if BURNABLE.include?(seatch_text)
                       '可燃ゴミ'
                     elsif NON_BURNABLE.include?(seatch_text)
@@ -80,7 +79,7 @@ class LinebotController < ApplicationController
                     elsif RECYCLABLE.include?(seatch_text)
                       '資源ゴミ'
                     else
-                      all_garbage.join(',')
+                      "次のものから選んでください:#{BURNABLE.join(',') + NON_BURNABLE.join(',') + RECYCLABLE.join(',')}"
                     end
 
     template(apply_message)

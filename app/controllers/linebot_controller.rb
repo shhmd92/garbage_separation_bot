@@ -53,7 +53,7 @@ class LinebotController < ApplicationController
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
-          client.reply_message(event['replyToken'], 'test')
+          client.reply_message(event['replyToken'], create_message(event))
         end
       end
     end
@@ -63,16 +63,25 @@ class LinebotController < ApplicationController
 
   private
 
+  def template(message)
+    {
+      "type": 'text',
+      "text": message
+    }
+  end
+
   def create_message(event)
     seatch_text = event.message['text']
-    if BURNABLE.include?(seatch_text)
-      '可燃ゴミ'
-    elsif NON_BURNABLE.include?(seatch_text)
-      '不燃ゴミ'
-    elsif RECYCLABLE.include?(seatch_text)
-      '資源ゴミ'
-    else
-      '不明'
-    end
+    apply_message = if BURNABLE.include?(seatch_text)
+                      '可燃ゴミ'
+                    elsif NON_BURNABLE.include?(seatch_text)
+                      '不燃ゴミ'
+                    elsif RECYCLABLE.include?(seatch_text)
+                      '資源ゴミ'
+                    else
+                      '不明'
+                    end
+
+    template(apply_message)
   end
 end
